@@ -93,6 +93,64 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
+/***/ "./lib/api.js":
+/*!********************!*\
+  !*** ./lib/api.js ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const axios = __webpack_require__(/*! axios */ "axios");
+
+const github_base_url = 'https://api.github.com';
+
+async function requestGithub(method, url, data, headers) {
+  return await axios({
+    method,
+    url: `${github_base_url}${url}`,
+    data,
+    headers
+  });
+}
+
+const isServer = true;
+
+async function request({
+  method = 'GET',
+  url,
+  data = {}
+}, req, res) {
+  if (!url) {
+    // url必须要存在
+    throw Error('url must provide');
+  }
+
+  if (isServer) {
+    const session = req.session;
+    const githubAuth = session.githubAuth || {};
+    const headers = {};
+
+    if (githubAuth.access_token) {
+      headers['Authorization'] = `${githubAuth.token_type} ${githubAuth.access_token}`;
+    }
+
+    return await requestGithub(method, url, data, headers);
+  } else {
+    return await axios({
+      method,
+      url: `/github${url}`,
+      data
+    });
+  }
+}
+
+module.exports = {
+  request,
+  requestGithub
+};
+
+/***/ }),
+
 /***/ "./pages/index.js":
 /*!************************!*\
   !*** ./pages/index.js ***!
@@ -104,9 +162,33 @@ module.exports =
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
-/* harmony default export */ __webpack_exports__["default"] = (() => __jsx("span", null, "Index"));
+
+
+const api = __webpack_require__(/*! ../lib/api */ "./lib/api.js");
+
+function Index() {
+  return __jsx("span", null, "Index");
+}
+
+Index.getInitialProps = async ({
+  ctx
+}) => {
+  // const result = await axios
+  //     .get('/github/search/repositories?q=react')
+  //     .then(res => console.log(res))
+  const result = await api.request({
+    url: '/search/repositories?q=react'
+  }, ctx.req, ctx.res);
+  return {
+    data: result.data
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Index);
 
 /***/ }),
 
@@ -119,6 +201,17 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 module.exports = __webpack_require__(/*! D:\Project\interview\blog\pages\index.js */"./pages/index.js");
 
+
+/***/ }),
+
+/***/ "axios":
+/*!************************!*\
+  !*** external "axios" ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("axios");
 
 /***/ }),
 

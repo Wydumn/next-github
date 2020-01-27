@@ -1,17 +1,47 @@
 import App from 'next/app'
-import React from 'react'
 import { Provider } from 'react-redux'
+import Router from 'next/router'
+import Link from 'next/link'
 import 'antd/dist/antd.css'
 
-import Layout from '../components/Layout.jsx'
+import axios from 'axios'
+
+import Layout from '../components/Layout'
 
 import withRedux from '../lib/with-redux'
+import PageLoading from '../components/PageLoading'
 
 // App中封装了许多App的核心代码
 class MyApp extends App {
 
     state = {
-        context: 'value'
+        loading: false
+    }
+
+    startLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
+
+    stopLoading = () => {
+        this.setState({
+            loading: false
+        })
+    }
+
+    componentDidMount() {
+        Router.events.on('routerChangeStart', this.startLoading)
+        Router.events.on('routerChangeComplete', this.stopLoading)
+        Router.events.on('routerChangeError', this.stopLoading)
+
+        
+    }
+
+    componentWillUnmount() {
+        Router.events.off('routerChangeStart', this.startLoading)
+        Router.events.off('routerChangeComplete', this.stopLoading)
+        Router.events.off('routerChangeError', this.stopLoading)
     }
 
     static async getInitialProps(ctx) {
@@ -22,7 +52,6 @@ class MyApp extends App {
             pageProps = await Component.getInitialProps(ctx)
         }
 
-        // "MyApp.getInitialProps()" should resolve to an object.
         return {pageProps}
     }
 
@@ -30,11 +59,18 @@ class MyApp extends App {
         const { Component, pageProps, reduxStore } = this.props
 
         return (
-            <Layout>
-                <Provider store={reduxStore}>
+            <Provider store={reduxStore}>
+                { this.state.loading ? <PageLoading /> : null }
+                <Layout>
+                    <Link href="/">
+                        <a>Index</a>
+                    </Link>
+                    <Link href="/detail">
+                        <a>Detail</a>
+                    </Link>
                     <Component {...pageProps} />
-                </Provider>
-            </Layout>
+                </Layout>
+            </Provider>
         )
     }
 }

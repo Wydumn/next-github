@@ -4,6 +4,8 @@ const next = require('next')
 const session = require('koa-session')
 const Redis = require('ioredis')
 const auth = require('./server/auth')
+const api = require('./server/api')
+const koaBody = require('koa-body')
 
 const RedisSessionStore = require('./server/session-store')
 
@@ -12,26 +14,26 @@ const app = next({ dev })
 // 类似express中的createApplication...
 const handle = app.getRequestHandler()
 
-// 创建redis client
 const redis = new Redis()   
 
-// pages下的页面编译完成后，启动服务
 app.prepare().then(() => {
     const server = new Koa()
     const router = new Router()
 
     server.keys = ['wydumn secret']     // 签名的 cookie 密钥数组   
+    
+    server.use(koaBody())
+    
     const SESSION_CONFIG = {
         key: 'jid', // 设置cookie的key
-        // maxAge: 10 * 1000,  // 设置最大保存时间 10s
-        store: new RedisSessionStore(redis)   // 存取session到数据库
+        store: new RedisSessionStore(redis)
     }  
 
     //=>使用koa-session
     server.use(session(SESSION_CONFIG, server))
 
-    // 配置处理Github OAuth登录
     auth(server)
+    api(server)
 
     router.get('/a/:id', async (ctx) => {
         const id = ctx.params.id;
@@ -71,6 +73,4 @@ app.prepare().then(() => {
     server.listen(3000, () => {
         console.log('koa server listening on 3000!')
     })
-
-    // ctx.body
 })

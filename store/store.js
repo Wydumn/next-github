@@ -1,11 +1,16 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import ReduxThunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import axios from 'axios'
+
+const LOGOUT = 'LOGOUT'
 
 const userInitialState = {}
 
 function userReducer( state = userInitialState, action) {
     switch(action.type) {
+        case LOGOUT:
+            return {}
         default:
             return state
     }
@@ -14,6 +19,24 @@ function userReducer( state = userInitialState, action) {
 const allReducers = combineReducers({
     user: userReducer
 })
+
+export function logout() {
+    return dispatch => {
+        axios.post('/logout').then(
+            resp => {
+                console.log('1')
+                if (resp.status === 200) {
+                    dispatch({
+                        type: LOGOUT
+                    })
+                } else {
+                    console.log('logout failed', resp)
+                }
+        }).catch(err => {
+            console.log('logout failed', err)
+        })
+    }
+}
 
 // 每次调用都生成一个新的store
 export default function initializeStore(state) {

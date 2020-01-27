@@ -9,7 +9,7 @@ class RedisSessionStore {
 
     // 获取Redis中存储的session数据
     async get(sid) {
-        console.log('get session', sid)
+        // console.log(`${sid}: ${sess}`)
         const id = getRedisSessionId(sid)
         const data = await this.client.get(id)
         if (!data) {
@@ -25,7 +25,6 @@ class RedisSessionStore {
 
     // 存储session数据到redis
     async set(sid, sess, ttl) {
-        console.log('set session', sid)
         const id = getRedisSessionId(sid)
         if (typeof ttl === 'number') {
             ttl = Math.ceil(ttl / 1000) // 传入数据库的单位应为秒
@@ -33,7 +32,7 @@ class RedisSessionStore {
         try {
             const sessStr = JSON.stringify(sess)
             if (ttl) {
-                await this.client.setex(id, ttl, sessStr)
+                await this.client.set(id, ttl, sessStr)
             } else {
                 await this.client.set(id, sessStr)
             }
