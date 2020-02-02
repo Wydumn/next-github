@@ -44,7 +44,7 @@ function MyLayout ({ children, user, logout, router }) {
     }, [logout])
 
     const handleGotoOAuth = useCallback(e => {
-        e.preventDefault()  // 组织跳转
+        e.preventDefault()  // 阻止跳转
 
         // asPath - 展现在浏览器上的实际路径，包含查询内容，为String类型
         axios.get(`/prepare-auth?url=${router.asPath}`).
@@ -73,41 +73,40 @@ function MyLayout ({ children, user, logout, router }) {
         <Layout>
             <Header>
                 <Container render={<div className="header-inner"/>}>
-                <div className="header-left">
-                    <div className='logo'>
-                        <Link href='/'>
-                            <Icon type="github" style={githubIconStyle} />
-                        </Link>
+                    <div className="header-left">
+                        <div className='logo'>
+                            <Link href='/'>
+                                <Icon type="github" style={githubIconStyle} />
+                            </Link>
+                        </div>
+                        <div>
+                            <Input.Search
+                                placeholder='搜索仓库'
+                                value={search}
+                                onChange={handleSearchChange}
+                                onSearch={handleOnSearch}
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <Input.Search
-                            placeholder='搜索仓库'
-                            value={search}
-                            onChange={handleSearchChange}
-                            onSearch={handleOnSearch}
-                        />
+                    <div className='header-right'>
+                        <div className="user">
+                            {
+                                user && user.id ? (
+                                    <Dropdown overlay={userDropDown}>
+                                        <a href="/">
+                                            <Avatar size={40} src={user.avatar_url} />
+                                        </a>
+                                    </Dropdown>
+                                ) : (
+                                    <Tooltip title="点击进行登录">
+                                        <a href={`/prepare-auth?url=${router.asPath}`}>
+                                            <Avatar size={40} icon="user" />
+                                        </a>
+                                    </Tooltip>
+                                )
+                            }
+                        </div>
                     </div>
-                </div>
-                <div className='header-right'>
-                    <div className="user">
-                        {
-                            user && user.id ? (
-                                <Dropdown overlay={userDropDown}>
-                                    <a href="/">
-                                        <Avatar size={40} src={user.avatar_url} />
-                                    </a>
-                                </Dropdown>
-                                
-                            ) : (
-                                <Tooltip title="点击进行登录">
-                                    <a href={`/prepare-auth?url=${router.asPath}`}>
-                                        <Avatar size={40} icon="user" />
-                                    </a>
-                                </Tooltip>
-                            )
-                        }
-                    </div>
-                </div>
                 </Container>
             </Header>
             <Content>
@@ -128,7 +127,7 @@ function MyLayout ({ children, user, logout, router }) {
             `}</style>
             <style jsx global>{`
                 #__next {
-                    height: 100%;
+                    height: 100%; 
                 }
                 .ant-layout {
                     min-height: 100%;
