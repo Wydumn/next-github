@@ -1,1 +1,0 @@
-{"ast":null,"code":"import React from \"react\";\nvar __jsx = React.createElement;\nimport { withRouter } from 'next/router';\n\nfunction Search({\n  router\n}) {\n  return __jsx(\"span\", null, router.query);\n}\n\nexport default withRouter(Search);","map":null,"metadata":{},"sourceType":"module"}

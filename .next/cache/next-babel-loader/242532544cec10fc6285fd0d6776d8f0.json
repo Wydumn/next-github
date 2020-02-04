@@ -1,1 +1,0 @@
-{"ast":null,"code":"import React from \"react\";\nvar __jsx = React.createElement;\nexport default (() => __jsx(\"span\", null, \"detail\"));","map":{"version":3,"sources":["D:/Project/interview/blog/pages/detail.js"],"names":[],"mappings":";;AAAA,gBAAe,MAAM,6BAArB","sourcesContent":["export default () => <span>detail</span> "]},"metadata":{},"sourceType":"module"}

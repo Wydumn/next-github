@@ -8,7 +8,7 @@ import LRU  from 'lru-cache'
 import Repo from '../components/Repo'
 
 const cache = new LRU({
-    maxAge: 1000 *10
+    maxAge: 1000 * 60
 })
 
 const api = require('../lib/api')
@@ -30,8 +30,6 @@ function Index ({ userRepos, userStarredRepos, user, router}) {
 
     useEffect(() => {
         if (!isServer) {    
-            cachedUserRepos = userRepos.data
-            cachedUserStarredRepos = userStarredRepos.data
             if (userRepos) {
                 cache.set('userRepos', userRepos)
             }

@@ -8,9 +8,7 @@ import Layout from '../components/Layout'
 import withRedux from '../lib/with-redux'
 import PageLoading from '../components/PageLoading'
 
-// App中封装了许多App的核心代码
 class MyApp extends App {
-
     state = {
         loading: false
     }
@@ -43,7 +41,6 @@ class MyApp extends App {
 
     static async getInitialProps(ctx) {
         const { Component } = ctx
-        console.log('app初始化')
         let pageProps = {}
         if (Component.getInitialProps) {
             pageProps = await Component.getInitialProps(ctx)
@@ -57,7 +54,7 @@ class MyApp extends App {
 
         return (
             <Provider store={reduxStore}>
-                { this.state.loading ? <PageLoading /> : null }
+                {this.state.loading ? <PageLoading /> : null}
                 <Layout>
                     <Component {...pageProps} />
                 </Layout>

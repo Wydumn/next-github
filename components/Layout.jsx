@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import getConfig from 'next/config'
 import { connect } from 'react-redux'
-import { withRouter, Router } from 'next/router'
+import Router, { withRouter } from 'next/router'
 
 import axios from 'axios'
 
@@ -42,22 +42,6 @@ function MyLayout ({ children, user, logout, router }) {
     const handleLogout = useCallback(() => {
         logout()
     }, [logout])
-
-    const handleGotoOAuth = useCallback(e => {
-        e.preventDefault()  // 阻止跳转
-
-        // asPath - 展现在浏览器上的实际路径，包含查询内容，为String类型
-        axios.get(`/prepare-auth?url=${router.asPath}`).
-            then(res => {
-                if (res.status === 200) {
-                    location.href = publicRuntimeConfig.OAUTH_URL
-                } else {
-                    console.log('prepare auth failed', res)
-                }
-            }).catch(err => {
-                console.log('prepare auth failed', err)
-            })
-    }, [])
 
     const userDropDown = (
         <Menu>

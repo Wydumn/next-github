@@ -1,1 +1,0 @@
-{"ast":null,"code":"function Detail() {\n  r;\n}","map":{"version":3,"sources":["D:/Project/interview/blog/pages/detail.js"],"names":["Detail","r"],"mappings":"AAAA,SAASA,MAAT,GAAkB;AACdC,EAAAA,CAAC;AACJ","sourcesContent":["function Detail() {\r\n    r\r\n}"]},"metadata":{},"sourceType":"script"}
