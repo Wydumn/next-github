@@ -23,7 +23,7 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/search": [
+    "/detail/issues": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]
