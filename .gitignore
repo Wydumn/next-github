@@ -1,6 +1,8 @@
-node_modules
 .next
 .vscode
+bundles
+node_modules
 pages-test
 test
 test.html
+yarn.lock

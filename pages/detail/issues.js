@@ -145,7 +145,9 @@ function Issues({ initialIssues, labels, owner, name }) {
     const [fetching, setFetching] = useState(false)
 
     useEffect(() => {
-        CACHE[`${owner}/${name}}`] = labels
+        if (!isServer) {
+            CACHE[`${owner}/${name}}`] = labels
+        }
     }, [owner, name, labels])
 
     const handleCreatorChange = useCallback(value => {
@@ -232,7 +234,6 @@ function Issues({ initialIssues, labels, owner, name }) {
 }
 
 Issues.getInitialProps = async ({ ctx }) => {
-    
     const { owner, name } = ctx.query
 
     const full_name = `${owner}/${name}`
